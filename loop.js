@@ -215,8 +215,8 @@ function check_list() {
 
 function count_player() {
   document.getElementById("sp_set").click();
-  setTimeout("document.getElementById('sp_st').click()", 1000);
   sleep(1500);
+  document.getElementById("sp_st").click();
   var IDs = [];
   var hashs = {};
   var _span_ = document.getElementsByTagName("span");
