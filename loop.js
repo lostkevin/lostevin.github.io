@@ -127,7 +127,8 @@ ws.onmessage = function (evt) {
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
       if (context["message"] === "!待机" || context["message"] === "！待机") {
-        var pcnt = count_player();
+        var players = get_player();
+        var pcnt = players.length;
         var Info = {
           "action": "send_group_msg",
           "params": {
@@ -135,7 +136,10 @@ ws.onmessage = function (evt) {
             "message": ""
           }
         };
-        Info["params"]["message"] = "当前准备:" + pcnt + "人";
+        Info["params"]["message"] = "当前准备:" + pcnt + "人\n";
+        for (var i = 0; i < pcnt; i++) {
+          Info["params"]["message"] += players[i] + "\n";
+        }
         ws.send(JSON.stringify(Info));
       }
     }
@@ -217,7 +221,7 @@ function check_list() {
 
 //javascript:void((function(){var e=document.createElement('script');e.setAttribute('src','/loop.js');document.body.appendChild(e);})());
 
-function count_player() {
+function get_player() {
   document.getElementById("sp_set").click();
   sleep(1500);
   document.getElementById("sp_st").click();
@@ -233,5 +237,5 @@ function count_player() {
       }
     }
   }
-  return IDs.length;
+  return IDs;
 }
