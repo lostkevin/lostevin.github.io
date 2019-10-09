@@ -153,13 +153,13 @@ function stck() {
   } else {
     //< 4 人
     //10sec / check, 这样约100s
-    if (count == 2) {
+    if (count == 10) {
       //调用cqhttp api
       if (pcnt != last_pcnt && pcnt != 0) {
         var Info = {
           "action": "send_group_msg",
           "params": {
-            "group_id": 601511940,
+            "group_id": 601691323,
             "message": ""
           }
         };
