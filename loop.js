@@ -119,7 +119,7 @@ function loop_stop() {
 }
 
 var count = 0;
-var ws = new WebSocket("wss://127.0.0.1:6700");
+var ws = new WebSocket("ws://127.0.0.1:6700");
 ws.onopen = function (evt) {};
 ws.onmessage = function (evt) {
   console.log(JSON.parse(evt.data));
