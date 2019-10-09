@@ -122,7 +122,24 @@ var count = 0;
 var ws = new WebSocket("ws://127.0.0.1:6700");
 ws.onopen = function (evt) {};
 ws.onmessage = function (evt) {
+  context = evt.data;
   console.log(JSON.parse(evt.data));
+  if (context["message_type"] === "group") {
+    if (context["group_id"] == 601691323) {
+      if (context["message"] === "!待机" || context["message"] === "！待机") {
+        var pcnt = count_player();
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": 601691323,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = "当前准备:" + pcnt + "人";
+        ws.send(JSON.stringify(Info));
+      }
+    }
+  }
 };
 ws.onclose = function (evt) {};
 var last_pcnt = 0;
@@ -151,13 +168,14 @@ function stck() {
     setTimeout("document.getElementById('btn_rand').click()", 4000);
     setTimeout("document.getElementById('btn_st').click()", 5000);
     var Info = {
-        "action": "send_group_msg",
-        "params": {
-            "group_id": 601691323,
-            "message": ""
-          }
-      };
-      Info["params"]["message"] = "新对局开始了";
+      "action": "send_group_msg",
+      "params": {
+        "group_id": 601691323,
+        "message": ""
+      }
+    };
+    Info["params"]["message"] = "新对局开始了";
+    ws.send(JSON.stringify(Info));
   } else {
     //< 4 人
     //10sec / check, 这样约100s
@@ -189,3 +207,14 @@ function check_list() {
 }
 
 //javascript:void((function(){var e=document.createElement('script');e.setAttribute('src','/loop.js');document.body.appendChild(e);})());
+
+function count_player() {
+  var pcnt = 0;
+  var _span_ = document.getElementsByTagName("span");
+  for (var i = 0; i < _span_.length; i++) {
+    if (_span_[i].innerText === "准备开始") {
+      pcnt++;
+    }
+  }
+  return pcnt;
+}
