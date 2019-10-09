@@ -122,8 +122,8 @@ var count = 0;
 var ws = new WebSocket("ws://127.0.0.1:6700");
 ws.onopen = function (evt) {};
 ws.onmessage = function (evt) {
-  context = evt.data;
-  console.log(JSON.parse(evt.data));
+  context = JSON.parse(evt.data);
+  console.log(context);
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
       if (context["message"] === "!待机" || context["message"] === "！待机") {
