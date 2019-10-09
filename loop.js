@@ -143,19 +143,23 @@ ws.onmessage = function (evt) {
 };
 ws.onclose = function (evt) {};
 var last_pcnt = 0;
+
 function stck() {
   window.loopcnt++;
   var IDs = [];
   var hashs = {};
+  var pcnt = 0;
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
       ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
       if (!hashs[ID]) {
+        pcnt++;
         IDs.push(ID);
         hashs[ID] = true;
+        _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
       }
-      _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
+
     }
     if (_span_[i].innerText === "对局开始") {
       _span_[i].parentNode.setAttribute("id", "btn_st");
@@ -164,7 +168,7 @@ function stck() {
       _span_[i].parentNode.setAttribute("id", "btn_rand");
     }
   }
-  var pcnt = IDs.length;
+
   if (pcnt >= 4) {
     document.getElementById("sbt_1").click();
     setTimeout("document.getElementById('sbt_2').click()", 1000);
@@ -221,11 +225,13 @@ function count_player() {
   var hashs = {};
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
+    if (_span_[i].innerText === "准备开始") {
       ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
       if (!hashs[ID]) {
         IDs.push(ID);
         hashs[ID] = true;
       }
+    }
   }
   return IDs.length;
 }
