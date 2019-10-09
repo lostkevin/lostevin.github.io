@@ -151,9 +151,9 @@ function stck() {
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
       ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
-      if (!hashs[elem]) {
-        IDs.push(elem);
-        hashs[elem] = true;
+      if (!hashs[ID]) {
+        IDs.push(ID);
+        hashs[ID] = true;
       }
       _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
     }
@@ -222,9 +222,9 @@ function count_player() {
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
       ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
-      if (!hashs[elem]) {
-        IDs.push(elem);
-        hashs[elem] = true;
+      if (!hashs[ID]) {
+        IDs.push(ID);
+        hashs[ID] = true;
       }
   }
   return IDs.length;
