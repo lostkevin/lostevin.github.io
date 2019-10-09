@@ -209,6 +209,8 @@ function check_list() {
 //javascript:void((function(){var e=document.createElement('script');e.setAttribute('src','/loop.js');document.body.appendChild(e);})());
 
 function count_player() {
+  document.getElementById("sp_set").click();
+  setTimeout("document.getElementById('sp_st').click()", 1000);
   var pcnt = 0;
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
