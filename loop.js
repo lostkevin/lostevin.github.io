@@ -150,6 +150,14 @@ function stck() {
     setTimeout("document.getElementById('sbt_4').click()", 3000);
     setTimeout("document.getElementById('btn_rand').click()", 4000);
     setTimeout("document.getElementById('btn_st').click()", 5000);
+    var Info = {
+        "action": "send_group_msg",
+        "params": {
+            "group_id": 601691323,
+            "message": ""
+          }
+      };
+      Info["params"]["message"] = "新对局开始了";
   } else {
     //< 4 人
     //10sec / check, 这样约100s
