@@ -161,7 +161,7 @@ function stck() {
   } else {
     //< 4 人
     //10sec / check, 这样约100s
-    if (count == 10) {
+    if (count == 5) {
       //调用cqhttp api
       if (pcnt != last_pcnt && pcnt != 0) {
         var Info = {
