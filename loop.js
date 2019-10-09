@@ -136,9 +136,9 @@ ws.onmessage = function (evt) {
             "message": ""
           }
         };
-        Info["params"]["message"] = "当前准备:" + pcnt + "人\n";
+        Info["params"]["message"] = "当前准备:" + pcnt + "人";
         for (var i = 0; i < pcnt; i++) {
-          Info["params"]["message"] += players[i] + "\n";
+          Info["params"]["message"] += "\n" + players[i];
         }
         ws.send(JSON.stringify(Info));
       }
