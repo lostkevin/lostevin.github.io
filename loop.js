@@ -153,7 +153,7 @@ function stck() {
   } else {
     //< 4 人
     //10sec / check, 这样约100s
-    if (count == 10) {
+    if (count == 2) {
       //调用cqhttp api
       if (pcnt != last_pcnt && pcnt != 0) {
         var Info = {
@@ -166,6 +166,7 @@ function stck() {
         Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
         ws.send(JSON.stringify(Info));
       }
+      last_pcnt = pcnt;
       count = 0;
     }
     count++;
