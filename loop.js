@@ -143,14 +143,18 @@ ws.onmessage = function (evt) {
 };
 ws.onclose = function (evt) {};
 var last_pcnt = 0;
-
 function stck() {
   window.loopcnt++;
-  var pcnt = 0;
+  var IDs = [];
+  var hashs = {};
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
-      pcnt++;
+      ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
+      if (!hashs[elem]) {
+        IDs.push(elem);
+        hashs[elem] = true;
+      }
       _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
     }
     if (_span_[i].innerText === "对局开始") {
@@ -160,6 +164,7 @@ function stck() {
       _span_[i].parentNode.setAttribute("id", "btn_rand");
     }
   }
+  var pcnt = IDs.length;
   if (pcnt >= 4) {
     document.getElementById("sbt_1").click();
     setTimeout("document.getElementById('sbt_2').click()", 1000);
@@ -174,7 +179,7 @@ function stck() {
         "message": ""
       }
     };
-    Info["params"]["message"] = "新对局开始了";
+    Info["params"]["message"] = IDs[0] + "," + IDs[1] + "," + IDs[2] + "," + IDs[3] + "的对局开始了";
     ws.send(JSON.stringify(Info));
   } else {
     //< 4 人
@@ -210,15 +215,17 @@ function check_list() {
 
 function count_player() {
   document.getElementById("sp_set").click();
+  setTimeout("document.getElementById('sp_st').click()", 1000);
   sleep(1500);
-  document.getElementById("sp_st").click();
-
-  var pcnt = 0;
+  var IDs = [];
+  var hashs = {};
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
-    if (_span_[i].innerText === "准备开始") {
-      pcnt++;
-    }
+      ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
+      if (!hashs[elem]) {
+        IDs.push(elem);
+        hashs[elem] = true;
+      }
   }
-  return pcnt;
+  return IDs.length;
 }
