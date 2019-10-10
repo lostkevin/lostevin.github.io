@@ -147,6 +147,8 @@ ws.onmessage = function (evt) {
 };
 ws.onclose = function (evt) {};
 var last_pcnt = 0;
+var open_player = [];
+var checkstate = false;
 
 function stck() {
   window.loopcnt++;
@@ -154,16 +156,19 @@ function stck() {
   var hashs = {};
   var pcnt = 0;
   var _span_ = document.getElementsByTagName("span");
+
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
       ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
       if (!hashs[ID]) {
         pcnt++;
         IDs.push(ID);
+        if (checkstate && open_player.indexOf(ID) > -1) {
+          checkstate = false;
+        }
         hashs[ID] = true;
         _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
       }
-
     }
     if (_span_[i].innerText === "对局开始") {
       _span_[i].parentNode.setAttribute("id", "btn_st");
@@ -172,22 +177,8 @@ function stck() {
       _span_[i].parentNode.setAttribute("id", "btn_rand");
     }
   }
-
-  if (pcnt >= 4) {
-    document.getElementById("sbt_1").click();
-    setTimeout("document.getElementById('sbt_2').click()", 1000);
-    setTimeout("document.getElementById('sbt_3').click()", 2000);
-    setTimeout("document.getElementById('sbt_4').click()", 3000);
-    setTimeout("document.getElementById('btn_rand').click()", 4000);
-    setTimeout("document.getElementById('btn_st').click()", 5000);
-    sleep(1000);
-    newIDs = get_player();
-    state = true;
-    for (var i = 0; i < IDs.length; i++) {
-      if (newIDs.indexOf(IDs[i]) > -1) {
-        state = false;
-      }
-    }
+  if (checkstate) {
+    open_player = open_player.slice(0, 3)
     var Info = {
       "action": "send_group_msg",
       "params": {
@@ -195,9 +186,18 @@ function stck() {
         "message": ""
       }
     };
-    Info["params"]["message"] = IDs[0] + "," + IDs[1] + "," + IDs[2] + "," + IDs[3] + "的对局开始了";
-    if (state)
-      ws.send(JSON.stringify(Info));
+    Info["params"]["message"] = open_player[0] + "," + open_player[1] + "," + open_player[2] + "," + open_player[3] + "的对局开始了";
+    ws.send(JSON.stringify(Info));
+    checkstate = false;
+  }
+  if (pcnt >= 4) {
+    document.getElementById("sbt_1").click();
+    setTimeout("document.getElementById('sbt_2').click()", 1000);
+    setTimeout("document.getElementById('sbt_3').click()", 2000);
+    setTimeout("document.getElementById('sbt_4').click()", 3000);
+    setTimeout("document.getElementById('btn_rand').click()", 4000);
+    setTimeout("document.getElementById('btn_st').click()", 5000);
+    checkstate = true;
   } else {
     //< 4 人
     //10sec / check, 这样约100s
