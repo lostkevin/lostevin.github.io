@@ -197,7 +197,7 @@ function stck() {
     setTimeout("document.getElementById('sbt_4').click()", 3000);
     setTimeout("document.getElementById('btn_rand').click()", 4000);
     setTimeout("document.getElementById('btn_st').click()", 5000);
-    open_player = IDs.slice(0,3);
+    open_player = IDs.slice(0,4);
     checkstate = true;
   } else {
     //< 4 人
