@@ -180,6 +180,14 @@ function stck() {
     setTimeout("document.getElementById('sbt_4').click()", 3000);
     setTimeout("document.getElementById('btn_rand').click()", 4000);
     setTimeout("document.getElementById('btn_st').click()", 5000);
+    sleep(1000);
+    newIDs = get_player();
+    state = true;
+    for (var i = 0; i < IDs.length; i++) {
+      if (newIDs.indexOf(IDs[i]) > -1) {
+        state = false;
+      }
+    }
     var Info = {
       "action": "send_group_msg",
       "params": {
@@ -188,7 +196,8 @@ function stck() {
       }
     };
     Info["params"]["message"] = IDs[0] + "," + IDs[1] + "," + IDs[2] + "," + IDs[3] + "的对局开始了";
-    ws.send(JSON.stringify(Info));
+    if (state)
+      ws.send(JSON.stringify(Info));
   } else {
     //< 4 人
     //10sec / check, 这样约100s
