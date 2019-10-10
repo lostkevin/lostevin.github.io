@@ -178,7 +178,7 @@ function stck() {
     }
   }
   if (checkstate) {
-    open_player = open_player.slice(0, 3)
+    open_player = open_player.slice(0, 4) //not include 4
     var Info = {
       "action": "send_group_msg",
       "params": {
