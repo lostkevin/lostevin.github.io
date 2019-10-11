@@ -227,6 +227,10 @@ function check_list() {
 function getRoomState() {
   var hashs = {};
   var _li_ = document.getElementsByTagName("li");
+  var RoomState = {
+    "Waiting": [],
+    "Playing": []
+  };
   RoomState.Waiting = [];
   RoomState.Playing = {};
   for (var i = 0; i < _li_.length; i++) {
