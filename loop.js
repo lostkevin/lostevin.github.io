@@ -126,7 +126,7 @@ ws.onmessage = function (evt) {
   console.log(context);
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
-      if (context["message"] === "!待机" || context["message"] === "！待机") {
+      if (context["message"] === "\\待机" || context["message"] === "＼待机") {
         var players = get_player();
         var pcnt = players.length;
         var Info = {
