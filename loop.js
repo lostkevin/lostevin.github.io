@@ -1,8 +1,4 @@
 window.loopcnt = 0; //计数
-DEBUG = true; //forbid console.log to avoid outofmemory
-if (DEBUG){
-  console.log = ()=>{}
-}
 !(function () {
   //创建工具栏
   var newdiv = document.createElement("div");
@@ -123,13 +119,23 @@ function loop_stop() {
 
 var count = 0;
 var ws = new WebSocket("ws://127.0.0.1:6700");
-ws.onopen = function (evt) {};
+var lastRoomState = {
+  "Waiting": [],
+  "Playing": []
+};
+
 ws.onmessage = function (evt) {
   context = JSON.parse(evt.data);
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
       if (context["message"] === "\\待机" || context["message"] === "＼待机") {
-        var players = get_player();
+        var RoomState = (() => {
+          document.getElementById("sp_set").click();
+          sleep(1500);
+          document.getElementById("sp_st").click();
+          return getRoomState()
+        })();
+        var players = RoomState.Waiting;
         var pcnt = players.length;
         var Info = {
           "action": "send_group_msg",
@@ -144,33 +150,48 @@ ws.onmessage = function (evt) {
         }
         ws.send(JSON.stringify(Info));
       }
+      if (context["message"] === "\\大会室" || context["message"] === "＼大会室") {
+        var RoomState = (() => {
+          document.getElementById("sp_set").click();
+          sleep(1500);
+          document.getElementById("sp_st").click();
+          return getRoomState()
+        })();
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": 601691323,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = "当前准备" + RoomState.Waiting.length + "人:";
+        for (var i = 0; i < RoomState.Waiting.length; i++) {
+          Info["params"]["message"] += "\n" + RoomState.Waiting[i];
+        }
+        if (RoomState.Playing.length > 0) {
+          Info["params"]["message"] += "\n对战中" + RoomState.Playing.length + "人:";
+          for (var i = 0; i < RoomState.Playing.length / 4; i++) {
+            Info["params"]["message"] += "\n";
+            for (var j = 0; j < 4; j++) {
+              Info["params"]["message"] += RoomState.Playing[4 * i + j] + " ";
+            }
+          }
+        }
+        ws.send(JSON.stringify(Info));
+      }
     }
   }
 };
-ws.onclose = function (evt) {};
-var last_pcnt = 0;
-var open_player = [];
-var checkstate = false;
 
 function stck() {
   window.loopcnt++;
-  var IDs = [];
-  var hashs = {};
   var pcnt = 0;
   var _span_ = document.getElementsByTagName("span");
 
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
-      ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
-      if (!hashs[ID]) {
-        pcnt++;
-        IDs.push(ID);
-        if (checkstate && open_player.indexOf(ID) > -1) {
-          checkstate = false;
-        }
-        hashs[ID] = true;
-        _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
-      }
+      _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
+      pcnt++;
     }
     if (_span_[i].innerText === "对局开始") {
       _span_[i].parentNode.setAttribute("id", "btn_st");
@@ -179,19 +200,7 @@ function stck() {
       _span_[i].parentNode.setAttribute("id", "btn_rand");
     }
   }
-  if (checkstate) {
-    open_player = open_player.slice(0, 4) //not include 4
-    var Info = {
-      "action": "send_group_msg",
-      "params": {
-        "group_id": 601691323,
-        "message": ""
-      }
-    };
-    Info["params"]["message"] = open_player[0] + "," + open_player[1] + "," + open_player[2] + "," + open_player[3] + "的对局开始了";
-    ws.send(JSON.stringify(Info));
-    checkstate = false;
-  }
+
   if (pcnt >= 4) {
     document.getElementById("sbt_1").click();
     setTimeout("document.getElementById('sbt_2').click()", 1000);
@@ -199,55 +208,98 @@ function stck() {
     setTimeout("document.getElementById('sbt_4').click()", 3000);
     setTimeout("document.getElementById('btn_rand').click()", 4000);
     setTimeout("document.getElementById('btn_st').click()", 5000);
-    open_player = IDs.slice(0,4);
-    checkstate = true;
-  } else {
-    //< 4 人
-    //10sec / check, 这样约100s
-    if (count == 5) {
-      //调用cqhttp api
-      if (pcnt != last_pcnt && pcnt != 0) {
-        var Info = {
-          "action": "send_group_msg",
-          "params": {
-            "group_id": 601691323,
-            "message": ""
-          }
-        };
-        Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
-        ws.send(JSON.stringify(Info));
-      }
-      last_pcnt = pcnt;
-      count = 0;
-    }
-    count++;
   }
   document.getElementById("lcnt").innerText = window.loopcnt;
 }
 
 function check_list() {
+  //刷新
   document.getElementById("sp_set").click();
   setTimeout("document.getElementById('sp_st').click()", 1000);
-  setTimeout("stck()", 2000);
+  //获取房间状态
+  setTimeout("checkOpenGameState(getRoomState())", 2000)
+  setTimeout("stck()", 2500);
 }
 
 //javascript:void((function(){var e=document.createElement('script');e.setAttribute('src','/loop.js');document.body.appendChild(e);})());
 
-function get_player() {
-  document.getElementById("sp_set").click();
-  sleep(1500);
-  document.getElementById("sp_st").click();
-  var IDs = [];
+//刷新后调用,解析元素得到比赛中以及准备中的ID,更新比赛桌
+function getRoomState() {
   var hashs = {};
-  var _span_ = document.getElementsByTagName("span");
-  for (var i = 0; i < _span_.length; i++) {
-    if (_span_[i].innerText === "准备开始") {
-      ID = _span_[i]["parentNode"]["offsetParent"]["childNodes"][0].innerText;
-      if (!hashs[ID]) {
-        IDs.push(ID);
-        hashs[ID] = true;
-      }
+  var _li_ = document.getElementsByTagName("li");
+  RoomState.Waiting = [];
+  RoomState.Playing = {};
+  for (var i = 0; i < _li_.length; i++) {
+    texts = _li_[i].innerText.split("\n");
+    if (!hashs[texts[0]]) {
+      if (texts.length == 1)
+        RoomState.Waiting.push(texts[0]);
+      else
+        RoomState.Playing.push(texts[0]);
+      hashs[texts[0]] = true;
     }
   }
-  return IDs;
+  if (RoomState.Playing.length % 4 != 0) {
+    console.log("Room State Error:" + RoomState);
+    RoomState = {
+      "Waiting": [],
+      "Playing": []
+    };
+  }
+
+  return RoomState;
+}
+
+//检查房间状态,若有新桌子则会发送开始消息
+function checkOpenGameState(RoomState) {
+  lastPlaying = transfromToTableArray(lastRoomState.Playing);
+  Playing = transfromToTableArray(RoomState.Playing);
+  for (var i = 0; i < Playing.length; i++) {
+    var j = 0;
+    for (; j < lastPlaying.length; j++) {
+      if (Playing[i].sort().toString() === lastPlaying[i].sort().toString()) {
+        break;
+      }
+    }
+    if (j == lastPlaying.length) {
+      //新桌,发送开始对局
+      var Info = {
+        "action": "send_group_msg",
+        "params": {
+          "group_id": 601691323,
+          "message": ""
+        }
+      };
+      Info["params"]["message"] = Playing[i][0] + "," + Playing[i][1] + "," + Playing[i][2] + "," + Playing[i][3] + "的对局开始了";
+      ws.send(JSON.stringify(Info));
+    }
+  }
+
+  if (count == 5) {
+    //发送等待消息
+    pcnt = RoomState.Waiting.length;
+    if (lastRoomState.Waiting.sort().toString() != RoomState.Waiting.sort().toString() && pcnt > 0 && pcnt < 4) {
+      var Info = {
+        "action": "send_group_msg",
+        "params": {
+          "group_id": 601691323,
+          "message": ""
+        }
+      };
+      Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
+      ws.send(JSON.stringify(Info));
+    }
+    count = 0;
+    lastRoomState.Waiting = RoomState.Waiting;
+  }
+  count++;
+  lastRoomState.Playing = RoomState.Playing;
+}
+
+function transfromToTableArray(Players) {
+  var result = [];
+  for (var i = 0; i < Players.length / 4; i++) {
+    result.push(Players.slice(4 * i, 4 * i + 4));
+  }
+  return result;
 }
