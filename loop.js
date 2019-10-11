@@ -236,7 +236,7 @@ function getRoomState() {
   for (var i = 0; i < _li_.length; i++) {
     texts = _li_[i].innerText.split("\n");
     if (!hashs[texts[0]]) {
-      if (texts.length == 1)
+      if (texts.length != 1)
         RoomState.Waiting.push(texts[0]);
       else
         RoomState.Playing.push(texts[0]);
