@@ -169,11 +169,11 @@ ws.onmessage = function (evt) {
           Info["params"]["message"] += "\n" + RoomState.Waiting[i];
         }
         if (RoomState.Playing.length > 0) {
-          Info["params"]["message"] += "\n对战中" + RoomState.Playing.length + "人:";
-          for (var i = 0; i < RoomState.Playing.length / 4; i++) {
+          Info["params"]["message"] += "\n对战中" + RoomState.Playing.length + "桌:";
+          for (var i = 0; i < RoomState.Playing.length; i++) {
             Info["params"]["message"] += "\n";
             for (var j = 0; j < 4; j++) {
-              Info["params"]["message"] += RoomState.Playing[4 * i + j] + " ";
+              Info["params"]["message"] += RoomState.Playing[i][j] + " ";
             }
           }
         }
