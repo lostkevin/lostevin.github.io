@@ -232,7 +232,7 @@ function getRoomState() {
     "Playing": []
   };
   RoomState.Waiting = [];
-  RoomState.Playing = {};
+  RoomState.Playing = [];
   for (var i = 0; i < _li_.length; i++) {
     texts = _li_[i].innerText.split("\n");
     if (!hashs[texts[0]]) {
