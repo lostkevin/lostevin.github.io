@@ -235,13 +235,12 @@ function getRoomState() {
   RoomState.Playing = [];
   for (var i = 0; i < _li_.length; i++) {
     texts = _li_[i].innerText.split("\n");
-    if (!hashs[texts[0]]) {
-      if (texts.length != 1)
-        RoomState.Waiting.push(texts[0]);
-      else
-        RoomState.Playing.push(texts[0]);
+    if (texts.length != 1 && !hashs[texts[0]]) {
+      RoomState.Waiting.push(texts[0]);
       hashs[texts[0]] = true;
     }
+    else
+      RoomState.Playing.push(texts[0]);
   }
   if (RoomState.Playing.length % 4 != 0) {
     console.log("Room State Error:" + RoomState);
@@ -250,14 +249,14 @@ function getRoomState() {
       "Playing": []
     };
   }
-
+  RoomState.Playing = transformToTableArray(RoomState.Playing);
   return RoomState;
 }
 
 //检查房间状态,若有新桌子则会发送开始消息
 function checkOpenGameState(RoomState) {
-  lastPlaying = transfromToTableArray(lastRoomState.Playing);
-  Playing = transfromToTableArray(RoomState.Playing);
+  lastPlaying = lastRoomState.Playing;
+  Playing = RoomState.Playing;
   for (var i = 0; i < Playing.length; i++) {
     var j = 0;
     for (; j < lastPlaying.length; j++) {
@@ -300,10 +299,20 @@ function checkOpenGameState(RoomState) {
   lastRoomState.Playing = RoomState.Playing;
 }
 
-function transfromToTableArray(Players) {
+function transformToTableArray(Players) {
   var result = [];
   for (var i = 0; i < Players.length / 4; i++) {
-    result.push(Players.slice(4 * i, 4 * i + 4));
+    slice = Players.slice(4 * i, 4 * i + 4);
+    if(!checkInList(result, slice))
+      result.push();
   }
   return result;
+}
+
+function checkInList(Lists, List) {
+  for (var i = 0; i < Lists.length; i++) {
+    if (List.sort().toString() == Lists[i].sort().toString())
+      return true;
+  }
+  return false;
 }
