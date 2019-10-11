@@ -1,5 +1,8 @@
 window.loopcnt = 0; //计数
-
+DEBUG = true; //forbid console.log to avoid outofmemory
+if (DEBUG){
+  Console.log = ()=>{}
+}
 !(function () {
   //创建工具栏
   var newdiv = document.createElement("div");
