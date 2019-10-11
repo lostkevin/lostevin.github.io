@@ -1,7 +1,7 @@
 window.loopcnt = 0; //计数
 DEBUG = true; //forbid console.log to avoid outofmemory
 if (DEBUG){
-  Console.log = ()=>{}
+  console.log = ()=>{}
 }
 !(function () {
   //创建工具栏
@@ -126,7 +126,6 @@ var ws = new WebSocket("ws://127.0.0.1:6700");
 ws.onopen = function (evt) {};
 ws.onmessage = function (evt) {
   context = JSON.parse(evt.data);
-  console.log(context);
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
       if (context["message"] === "\\待机" || context["message"] === "＼待机") {
