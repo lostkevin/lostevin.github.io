@@ -304,7 +304,7 @@ function transformToTableArray(Players) {
   for (var i = 0; i < Players.length / 4; i++) {
     slice = Players.slice(4 * i, 4 * i + 4);
     if(!checkInList(result, slice))
-      result.push();
+      result.push(slice);
   }
   return result;
 }
