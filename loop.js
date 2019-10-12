@@ -174,10 +174,7 @@ async function loop_start() {
   e.value = "停止循环";
   document.getElementById("lcnt").innerText = window.loopcnt;
 
-  setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
-  await sleep(2500);
-  console.log("lastRoomState:");
-  console.log(JSON.stringify(lastRoomState));
+  setTimeout("InitRoom()", 2000);
 }
 
 function loop_stop() {
@@ -230,6 +227,13 @@ function check_list() {
 
 //javascript:void((function(){var e=document.createElement('script');e.setAttribute('src','/loop.js');document.body.appendChild(e);})());
 
+function InitRoom() {
+  lastRoomState = getRoomState();
+  lastRoomState.Playing = transformToTableArray(lastRoomState.Playing);
+  console.log("lastRoomState:");
+  console.log(JSON.stringify(lastRoomState));
+}
+
 //刷新后调用,解析元素得到比赛中以及准备中的ID,更新比赛桌
 function getRoomState() {
   var hashs = {};
@@ -257,8 +261,8 @@ function getRoomState() {
       "Playing": []
     };
   }
-    console.log("Room State: ");
-    console.log(JSON.stringify(RoomState));
+  console.log("Room State: ");
+  console.log(JSON.stringify(RoomState));
   RoomState.Playing = transformToTableArray(RoomState.Playing);
   return RoomState;
 }
