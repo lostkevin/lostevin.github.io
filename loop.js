@@ -190,8 +190,8 @@ function stck() {
 
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "准备开始") {
-      _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
       pcnt++;
+      _span_[i].parentNode.setAttribute("id", "sbt_" + pcnt);
     }
     if (_span_[i].innerText === "对局开始") {
       _span_[i].parentNode.setAttribute("id", "btn_st");
