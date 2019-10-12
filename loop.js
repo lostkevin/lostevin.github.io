@@ -238,12 +238,14 @@ function getRoomState() {
     if (texts.length != 1 && !hashs[texts[0]]) {
       RoomState.Waiting.push(texts[0]);
       hashs[texts[0]] = true;
-    }
-    else
+    } else
       RoomState.Playing.push(texts[0]);
   }
+  console.log("Room State: ");
+  console.log(RoomState);
   if (RoomState.Playing.length % 4 != 0) {
-    console.log("Room State Error:" + RoomState);
+    console.log("Room State Error:");
+    console.log(RoomState);
     RoomState = {
       "Waiting": [],
       "Playing": []
@@ -255,6 +257,7 @@ function getRoomState() {
 
 //检查房间状态,若有新桌子则会发送开始消息
 function checkOpenGameState(RoomState) {
+  console.log(lastRoomState);
   lastPlaying = lastRoomState.Playing;
   Playing = RoomState.Playing;
   for (var i = 0; i < Playing.length; i++) {
@@ -303,7 +306,7 @@ function transformToTableArray(Players) {
   var result = [];
   for (var i = 0; i < Players.length / 4; i++) {
     slice = Players.slice(4 * i, 4 * i + 4);
-    if(!checkInList(result, slice))
+    if (!checkInList(result, slice))
       result.push(slice);
   }
   return result;
