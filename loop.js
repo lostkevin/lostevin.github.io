@@ -275,7 +275,7 @@ function checkOpenGameState(RoomState) {
   for (var i = 0; i < Playing.length; i++) {
     var j = 0;
     for (; j < lastPlaying.length; j++) {
-      if (Playing[i].sort().toString() === lastPlaying[i].sort().toString()) {
+      if (Playing[i].sort().toString() === lastPlaying[j].sort().toString()) {
         break;
       }
     }
