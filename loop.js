@@ -128,7 +128,7 @@ ws.onmessage = function (evt) {
   context = JSON.parse(evt.data);
   if (context["message_type"] === "group") {
     if (context["group_id"] == 601691323) {
-      if (context["message"] === "\\待机" || context["message"] === "＼待机") {
+      if (context["message"] === "?待机" || context["message"] === "？待机") {
         var RoomState = (() => {
           document.getElementById("sp_set").click();
           sleep(1500);
@@ -150,7 +150,7 @@ ws.onmessage = function (evt) {
         }
         ws.send(JSON.stringify(Info));
       }
-      if (context["message"] === "\\大会室" || context["message"] === "＼大会室") {
+      if (context["message"] === "？大会室" || context["message"] === "?大会室") {
         var RoomState = (() => {
           document.getElementById("sp_set").click();
           sleep(1500);
