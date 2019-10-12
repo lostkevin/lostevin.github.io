@@ -43,6 +43,72 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+var count = 0;
+var ws = new WebSocket("ws://127.0.0.1:6700");
+var lastRoomState = {
+  "Waiting": [],
+  "Playing": []
+};
+
+ws.onmessage = function (evt) {
+  context = JSON.parse(evt.data);
+  if (context["message_type"] === "group") {
+    if (context["group_id"] == 601691323) {
+      if (context["message"] === "?待机" || context["message"] === "？待机") {
+        var RoomState = (() => {
+          document.getElementById("sp_set").click();
+          sleep(1500);
+          document.getElementById("sp_st").click();
+          return getRoomState()
+        })();
+        var players = RoomState.Waiting;
+        var pcnt = players.length;
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": 601691323,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = "当前准备:" + pcnt + "人";
+        for (var i = 0; i < pcnt; i++) {
+          Info["params"]["message"] += "\n" + players[i];
+        }
+        ws.send(JSON.stringify(Info));
+      }
+      if (context["message"] === "？大会室" || context["message"] === "?大会室") {
+        var RoomState = (() => {
+          document.getElementById("sp_set").click();
+          sleep(1500);
+          document.getElementById("sp_st").click();
+          return getRoomState()
+        })();
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": 601691323,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = "当前准备" + RoomState.Waiting.length + "人:";
+        for (var i = 0; i < RoomState.Waiting.length; i++) {
+          Info["params"]["message"] += "\n" + RoomState.Waiting[i];
+        }
+        if (RoomState.Playing.length > 0) {
+          Info["params"]["message"] += "\n对战中" + RoomState.Playing.length + "桌:";
+          for (var i = 0; i < RoomState.Playing.length; i++) {
+            Info["params"]["message"] += "\n";
+            for (var j = 0; j < 4; j++) {
+              Info["params"]["message"] += RoomState.Playing[i][j] + " ";
+            }
+          }
+        }
+        ws.send(JSON.stringify(Info));
+      }
+    }
+  }
+};
+
 async function tenhou_log() {
   //L0000 | 00:00 | 四般南喰赤 | player4(+30.1,-5枚) player5(+10,0枚) player9(-12.0) player0(-28.1,+5枚)
   var btn = document.querySelector(
@@ -109,6 +175,8 @@ function loop_start() {
   document.getElementById("lcnt").innerText = window.loopcnt;
 
   setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
+  console.log("lastRoomState:");
+  console.log(JSON.stringify(lastRoomState));
 }
 
 function loop_stop() {
@@ -119,71 +187,7 @@ function loop_stop() {
   document.getElementById("lcnt").innerText = window.loopcnt;
 }
 
-var count = 0;
-var ws = new WebSocket("ws://127.0.0.1:6700");
-var lastRoomState = {
-  "Waiting": [],
-  "Playing": []
-};
 
-ws.onmessage = function (evt) {
-  context = JSON.parse(evt.data);
-  if (context["message_type"] === "group") {
-    if (context["group_id"] == 601691323) {
-      if (context["message"] === "?待机" || context["message"] === "？待机") {
-        var RoomState = (() => {
-          document.getElementById("sp_set").click();
-          sleep(1500);
-          document.getElementById("sp_st").click();
-          return getRoomState()
-        })();
-        var players = RoomState.Waiting;
-        var pcnt = players.length;
-        var Info = {
-          "action": "send_group_msg",
-          "params": {
-            "group_id": 601691323,
-            "message": ""
-          }
-        };
-        Info["params"]["message"] = "当前准备:" + pcnt + "人";
-        for (var i = 0; i < pcnt; i++) {
-          Info["params"]["message"] += "\n" + players[i];
-        }
-        ws.send(JSON.stringify(Info));
-      }
-      if (context["message"] === "？大会室" || context["message"] === "?大会室") {
-        var RoomState = (() => {
-          document.getElementById("sp_set").click();
-          sleep(1500);
-          document.getElementById("sp_st").click();
-          return getRoomState()
-        })();
-        var Info = {
-          "action": "send_group_msg",
-          "params": {
-            "group_id": 601691323,
-            "message": ""
-          }
-        };
-        Info["params"]["message"] = "当前准备" + RoomState.Waiting.length + "人:";
-        for (var i = 0; i < RoomState.Waiting.length; i++) {
-          Info["params"]["message"] += "\n" + RoomState.Waiting[i];
-        }
-        if (RoomState.Playing.length > 0) {
-          Info["params"]["message"] += "\n对战中" + RoomState.Playing.length + "桌:";
-          for (var i = 0; i < RoomState.Playing.length; i++) {
-            Info["params"]["message"] += "\n";
-            for (var j = 0; j < 4; j++) {
-              Info["params"]["message"] += RoomState.Playing[i][j] + " ";
-            }
-          }
-        }
-        ws.send(JSON.stringify(Info));
-      }
-    }
-  }
-};
 
 function stck() {
   window.loopcnt++;
