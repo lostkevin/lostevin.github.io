@@ -109,6 +109,7 @@ function loop_start() {
   document.getElementById("lcnt").innerText = window.loopcnt;
 
   setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
+}
 
 function loop_stop() {
   clearInterval(window.loop);
