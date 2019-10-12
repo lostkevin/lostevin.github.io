@@ -175,6 +175,7 @@ function loop_start() {
   document.getElementById("lcnt").innerText = window.loopcnt;
 
   setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
+  sleep(2500);
   console.log("lastRoomState:");
   console.log(JSON.stringify(lastRoomState));
 }
