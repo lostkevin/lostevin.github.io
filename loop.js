@@ -147,7 +147,7 @@ async function tenhou_log() {
   alert("读取成功，可以利用【天凤统计工具】进行更详细的统计");
 }
 
-function loop_start() {
+async function loop_start() {
   var _span_ = document.getElementsByTagName("span");
   for (var i = 0; i < _span_.length; i++) {
     if (_span_[i].innerText === "对局管理") {
@@ -175,7 +175,7 @@ function loop_start() {
   document.getElementById("lcnt").innerText = window.loopcnt;
 
   setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
-  sleep(2500);
+  await sleep(2500);
   console.log("lastRoomState:");
   console.log(JSON.stringify(lastRoomState));
 }
