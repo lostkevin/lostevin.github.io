@@ -107,7 +107,8 @@ function loop_start() {
   e.setAttribute("onclick", "loop_stop()");
   e.value = "停止循环";
   document.getElementById("lcnt").innerText = window.loopcnt;
-}
+
+  setTimeout("lastRoomState = transformToTableArray(getRoomState())", 2000);
 
 function loop_stop() {
   clearInterval(window.loop);
@@ -241,23 +242,25 @@ function getRoomState() {
     } else
       RoomState.Playing.push(texts[0]);
   }
-  console.log("Room State: ");
-  console.log(RoomState);
+
   if (RoomState.Playing.length % 4 != 0) {
     console.log("Room State Error:");
-    console.log(RoomState);
+    console.log(JSON.stringify(RoomState));
     RoomState = {
       "Waiting": [],
       "Playing": []
     };
   }
+    console.log("Room State: ");
+    console.log(JSON.stringify(RoomState));
   RoomState.Playing = transformToTableArray(RoomState.Playing);
   return RoomState;
 }
 
 //检查房间状态,若有新桌子则会发送开始消息
 function checkOpenGameState(RoomState) {
-  console.log(lastRoomState);
+  console.log("lastRoomState:");
+  console.log(JSON.stringify(lastRoomState));
   lastPlaying = lastRoomState.Playing;
   Playing = RoomState.Playing;
   for (var i = 0; i < Playing.length; i++) {
