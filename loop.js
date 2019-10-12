@@ -318,7 +318,7 @@ function transformToTableArray(Players) {
   var result = [];
   for (var i = 0; i < Players.length / 4; i++) {
     slice = Players.slice(4 * i, 4 * i + 4);
-    if (!checkInList(result, slice))
+    if (!isAllEqual(slice) && !checkInList(result, slice))
       result.push(slice);
   }
   return result;
@@ -330,4 +330,10 @@ function checkInList(Lists, List) {
       return true;
   }
   return false;
+}
+
+function isAllEqual(a) {
+  return !a.length || !a.some((v, i) => {
+    return v !== a[0];
+  });
 }
