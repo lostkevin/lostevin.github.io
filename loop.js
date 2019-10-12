@@ -1,4 +1,11 @@
 window.loopcnt = 0; //计数
+var logBak = console.log;
+function debug(f){
+  if (f)
+    console.log = ()=>{}
+  else
+    console.log = logBak;
+}
 !(function () {
   //创建工具栏
   var newdiv = document.createElement("div");
