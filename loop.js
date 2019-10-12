@@ -229,7 +229,6 @@ function check_list() {
 
 function InitRoom() {
   lastRoomState = getRoomState();
-  lastRoomState.Playing = transformToTableArray(lastRoomState.Playing);
   console.log("lastRoomState:");
   console.log(JSON.stringify(lastRoomState));
 }
