@@ -1,11 +1,4 @@
 window.loopcnt = 0; //计数
-var logBak = console.log;
-function debug(f){
-  if (f)
-    console.log = ()=>{}
-  else
-    console.log = logBak;
-}
 !(function () {
   //创建工具栏
   var newdiv = document.createElement("div");
@@ -155,15 +148,7 @@ async function tenhou_log() {
 }
 
 async function loop_start() {
-  var _span_ = document.getElementsByTagName("span");
-  for (var i = 0; i < _span_.length; i++) {
-    if (_span_[i].innerText === "对局管理") {
-      _span_[i].setAttribute("id", "sp_st");
-    }
-    if (_span_[i].innerText === "赛事设定") {
-      _span_[i].setAttribute("id", "sp_set");
-    }
-  }
+  renameButton();
   if (
     document.getElementById("sp_set") == null ||
     document.getElementById("sp_set") == ""
@@ -225,6 +210,7 @@ function stck() {
 
 function check_list() {
   //刷新
+  renameButton();
   document.getElementById("sp_set").click();
   setTimeout("document.getElementById('sp_st').click()", 1000);
   //获取房间状态
@@ -343,4 +329,16 @@ function isAllEqual(a) {
   return !a.length || !a.some((v, i) => {
     return v !== a[0];
   });
+}
+
+function renameButton() {
+  var _span_ = document.getElementsByTagName("span");
+  for (var i = 0; i < _span_.length; i++) {
+    if (_span_[i].innerText === "对局管理") {
+      _span_[i].setAttribute("id", "sp_st");
+    }
+    if (_span_[i].innerText === "赛事设定") {
+      _span_[i].setAttribute("id", "sp_set");
+    }
+  }
 }
