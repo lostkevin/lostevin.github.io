@@ -274,16 +274,18 @@ function checkOpenGameState(RoomState) {
       }
     }
     if (j == lastPlaying.length) {
-      //新桌,发送开始对局
-      var Info = {
-        "action": "send_group_msg",
-        "params": {
-          "group_id": 601691323,
-          "message": ""
-        }
-      };
-      Info["params"]["message"] = Playing[i][0] + "," + Playing[i][1] + "," + Playing[i][2] + "," + Playing[i][3] + "的对局开始了";
-      ws.send(JSON.stringify(Info));
+      permit_group.forEach((v)=>{
+        //新桌,发送开始对局
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": v,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = Playing[i][0] + "," + Playing[i][1] + "," + Playing[i][2] + "," + Playing[i][3] + "的对局开始了";
+        ws.send(JSON.stringify(Info));
+        });
     }
   }
 
@@ -291,18 +293,19 @@ function checkOpenGameState(RoomState) {
     //发送等待消息
     pcnt = RoomState.Waiting.length;
     if (lastRoomState.Waiting.sort().toString() != RoomState.Waiting.sort().toString() && pcnt > 0 && pcnt < 4) {
-      var Info = {
-        "action": "send_group_msg",
-        "params": {
-          "group_id": 601691323,
-          "message": ""
-        }
-      };
-      Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
-      ws.send(JSON.stringify(Info));
-    }
-    count = 0;
-    lastRoomState.Waiting = RoomState.Waiting;
+      permit_group.forEach((v)=>{
+        var Info = {
+          "action": "send_group_msg",
+          "params": {
+            "group_id": v,
+            "message": ""
+          }
+        };
+        Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
+        ws.send(JSON.stringify(Info));
+      });
+      count = 0;
+      lastRoomState.Waiting = RoomState.Waiting;
   }
   count++;
   lastRoomState.Playing = RoomState.Playing;
