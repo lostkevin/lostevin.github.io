@@ -49,11 +49,12 @@ var lastRoomState = {
   "Waiting": [],
   "Playing": []
 };
+var permit_group = [601691323, 959997346];
 
 ws.onmessage = function (evt) {
   context = JSON.parse(evt.data);
   if (context["message_type"] === "group") {
-    if (context["group_id"] == 601691323) {
+    if (permit_group.indexOf(context["group_id"]) != -1) {
       if (context["message"] === "?待机" || context["message"] === "？待机") {
         var RoomState = (() => {
           document.getElementById("sp_set").click();
@@ -66,7 +67,7 @@ ws.onmessage = function (evt) {
         var Info = {
           "action": "send_group_msg",
           "params": {
-            "group_id": 601691323,
+            "group_id": context["group_id"],
             "message": ""
           }
         };
