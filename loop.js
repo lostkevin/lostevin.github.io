@@ -307,9 +307,9 @@ function checkOpenGameState(RoomState) {
       count = 0;
       lastRoomState.Waiting = RoomState.Waiting;
     }
-    count++;
-    lastRoomState.Playing = RoomState.Playing;
   }
+  count++;
+  lastRoomState.Playing = RoomState.Playing;
 }
   function transformToTableArray(Players) {
     var result = [];
