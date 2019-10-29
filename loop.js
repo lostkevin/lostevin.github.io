@@ -274,7 +274,7 @@ function checkOpenGameState(RoomState) {
       }
     }
     if (j == lastPlaying.length) {
-      permit_group.forEach((v)=>{
+      permit_group.forEach((v) => {
         //新桌,发送开始对局
         var Info = {
           "action": "send_group_msg",
@@ -285,7 +285,7 @@ function checkOpenGameState(RoomState) {
         };
         Info["params"]["message"] = Playing[i][0] + "," + Playing[i][1] + "," + Playing[i][2] + "," + Playing[i][3] + "的对局开始了";
         ws.send(JSON.stringify(Info));
-        });
+      });
     }
   }
 
@@ -293,7 +293,7 @@ function checkOpenGameState(RoomState) {
     //发送等待消息
     pcnt = RoomState.Waiting.length;
     if (lastRoomState.Waiting.sort().toString() != RoomState.Waiting.sort().toString() && pcnt > 0 && pcnt < 4) {
-      permit_group.forEach((v)=>{
+      permit_group.forEach((v) => {
         var Info = {
           "action": "send_group_msg",
           "params": {
@@ -306,43 +306,43 @@ function checkOpenGameState(RoomState) {
       });
       count = 0;
       lastRoomState.Waiting = RoomState.Waiting;
-  }
-  count++;
-  lastRoomState.Playing = RoomState.Playing;
-}
-
-function transformToTableArray(Players) {
-  var result = [];
-  for (var i = 0; i < Players.length / 4; i++) {
-    slice = Players.slice(4 * i, 4 * i + 4);
-    if (!isAllEqual(slice) && !checkInList(result, slice))
-      result.push(slice);
-  }
-  return result;
-}
-
-function checkInList(Lists, List) {
-  for (var i = 0; i < Lists.length; i++) {
-    if (List.sort().toString() == Lists[i].sort().toString())
-      return true;
-  }
-  return false;
-}
-
-function isAllEqual(a) {
-  return !a.length || !a.some((v, i) => {
-    return v !== a[0];
-  });
-}
-
-function renameButton() {
-  var _span_ = document.getElementsByTagName("span");
-  for (var i = 0; i < _span_.length; i++) {
-    if (_span_[i].innerText === "对局管理") {
-      _span_[i].setAttribute("id", "sp_st");
     }
-    if (_span_[i].innerText === "赛事设定") {
-      _span_[i].setAttribute("id", "sp_set");
-    }
+    count++;
+    lastRoomState.Playing = RoomState.Playing;
   }
 }
+  function transformToTableArray(Players) {
+    var result = [];
+    for (var i = 0; i < Players.length / 4; i++) {
+      slice = Players.slice(4 * i, 4 * i + 4);
+      if (!isAllEqual(slice) && !checkInList(result, slice))
+        result.push(slice);
+    }
+    return result;
+  }
+
+  function checkInList(Lists, List) {
+    for (var i = 0; i < Lists.length; i++) {
+      if (List.sort().toString() == Lists[i].sort().toString())
+        return true;
+    }
+    return false;
+  }
+
+  function isAllEqual(a) {
+    return !a.length || !a.some((v, i) => {
+      return v !== a[0];
+    });
+  }
+
+  function renameButton() {
+    var _span_ = document.getElementsByTagName("span");
+    for (var i = 0; i < _span_.length; i++) {
+      if (_span_[i].innerText === "对局管理") {
+        _span_[i].setAttribute("id", "sp_st");
+      }
+      if (_span_[i].innerText === "赛事设定") {
+        _span_[i].setAttribute("id", "sp_set");
+      }
+    }
+  }
