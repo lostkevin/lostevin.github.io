@@ -87,7 +87,7 @@ ws.onmessage = function (evt) {
         var Info = {
           "action": "send_group_msg",
           "params": {
-            "group_id": 601691323,
+            "group_id": context["group_id"],
             "message": ""
           }
         };
