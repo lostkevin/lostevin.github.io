@@ -304,9 +304,9 @@ function checkOpenGameState(RoomState) {
         Info["params"]["message"] = pcnt + "q" + (4 - pcnt) + ", 请尽快加入比赛场474063";
         ws.send(JSON.stringify(Info));
       });
-      count = 0;
-      lastRoomState.Waiting = RoomState.Waiting;
     }
+    count = 0;
+    lastRoomState.Waiting = RoomState.Waiting;
   }
   count++;
   lastRoomState.Playing = RoomState.Playing;
