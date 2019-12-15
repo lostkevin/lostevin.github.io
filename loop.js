@@ -293,7 +293,7 @@ function checkOpenGameState(RoomState) {
             "message": ""
           }
         };
-        Info["params"]["message"] = Playing[i][0] + "," + Playing[i][1] + "," + Playing[i][2] + "," + Playing[i][3] + "的对局结束了";
+        Info["params"]["message"] = lastPlaying[i][0] + "," + lastPlaying[i][1] + "," + lastPlaying[i][2] + "," + lastPlaying[i][3] + "的对局结束了";
         ws.send(JSON.stringify(Info));
       });
     }
